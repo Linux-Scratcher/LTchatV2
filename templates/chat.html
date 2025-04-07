@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salon de Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io();
+            
+            // Rejoindre le salon
+            socket.emit('join');
+            
+            // Gérer l'envoi de message
+            const form = document.getElementById('message-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const input = document.getElementById('message-input');
+                if (input.value.trim()) {
+                    socket.emit('message', {msg: input.value});
+                    input.value = '';
+                }
+            });
+            
+            // Afficher les messages
+            socket.on('message', (data) => {
+                const messages = document.getElementById('messages');
+                const li = document.createElement('li');
+                li.textContent = data.msg;
+                messages.appendChild(li);
+                messages.scrollTop = messages.scrollHeight;
+            });
+            
+            // Gérer la déconnexion
+            window.addEventListener('beforeunload', () => {
+                socket.emit('leave');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <h1>Salon Général</h1>
+            <a href="/logout" class="logout">Déconnexion</a>
+        </header>
+        
+        <ul id="messages"></ul>
+        
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Écrivez votre message..." autocomplete="off">
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+</body>
+</html>

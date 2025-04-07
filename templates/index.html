@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat - Connexion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Bienvenue sur le Chat</h1>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Choisissez un pseudo" required>
+            <button type="submit">Entrer dans le chat</button>
+        </form>
+    </div>
+</body>
+</html>
